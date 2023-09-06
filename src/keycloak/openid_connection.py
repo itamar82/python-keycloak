@@ -54,6 +54,7 @@ class KeycloakOpenIDConnection(ConnectionManager):
     _custom_headers = None
     _user_realm_name = None
     _expires_at = None
+    _scope = None
 
     def __init__(
         self,
@@ -69,6 +70,7 @@ class KeycloakOpenIDConnection(ConnectionManager):
         custom_headers=None,
         user_realm_name=None,
         timeout=60,
+        scope="openid"
     ):
         """Init method.
 
@@ -97,6 +99,8 @@ class KeycloakOpenIDConnection(ConnectionManager):
         :type user_realm_name: str
         :param timeout: connection timeout in seconds
         :type timeout: int
+        :param scope: scope
+        :type scope: str
         """
         # token is renewed when it hits 90% of its lifetime. This is to account for any possible
         # clock skew.
@@ -112,6 +116,7 @@ class KeycloakOpenIDConnection(ConnectionManager):
         self.client_secret_key = client_secret_key
         self.user_realm_name = user_realm_name
         self.timeout = timeout
+        self.scope = scope
 
         if self.token is None:
             self.get_token()
@@ -294,6 +299,7 @@ class KeycloakOpenIDConnection(ConnectionManager):
             verify=self.verify,
             client_secret_key=self.client_secret_key,
             timeout=self.timeout,
+            scope=self.scope
         )
 
         grant_type = []
